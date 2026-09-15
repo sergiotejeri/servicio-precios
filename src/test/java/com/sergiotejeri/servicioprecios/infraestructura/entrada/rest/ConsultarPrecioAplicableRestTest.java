@@ -2,6 +2,7 @@ package com.sergiotejeri.servicioprecios.infraestructura.entrada.rest;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -50,6 +51,26 @@ class ConsultarPrecioAplicableRestTest {
 				new Escenario("2020-06-14T21:00:00", 1, "2020-06-14T00:00:00", "2020-12-31T23:59:59", 35.50),
 				new Escenario("2020-06-15T10:00:00", 3, "2020-06-15T00:00:00", "2020-06-15T11:00:00", 30.50),
 				new Escenario("2020-06-16T21:00:00", 4, "2020-06-15T16:00:00", "2020-12-31T23:59:59", 38.95));
+	}
+
+	@Test
+	void rechazaUnIdentificadorDeProductoNoValido() throws Exception {
+		clienteHttp.perform(get("/precios")
+				.param("fechaAplicacion", "2020-06-14T10:00:00")
+				.param("idProducto", "0")
+				.param("idMarca", "1"))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.status").value(400));
+	}
+
+	@Test
+	void informaCuandoNoExisteUnPrecioAplicable() throws Exception {
+		clienteHttp.perform(get("/precios")
+				.param("fechaAplicacion", "2020-06-14T10:00:00")
+				.param("idProducto", "99999")
+				.param("idMarca", "1"))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.status").value(404));
 	}
 
 	private record Escenario(
