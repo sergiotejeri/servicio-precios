@@ -27,6 +27,10 @@ Para compilar el proyecto y ejecutar todas las pruebas:
 .\mvnw.cmd clean verify
 ```
 
+El comando también valida el estilo y genera el informe de cobertura en
+`target/site/jacoco/index.html`. Además, exige una cobertura mínima de líneas
+del 90 %.
+
 ## Consulta de precio
 
 La consulta se realiza con `GET /precios` y requiere estos parámetros:
@@ -99,7 +103,7 @@ El proyecto sigue una arquitectura hexagonal sencilla:
 
 El caso de uso depende de un puerto de salida (`RepositorioPrecios`), no de JPA. Por eso el acceso a datos puede cambiar sin modificar la lógica de selección del precio.
 
-La consulta JPA filtra por producto, marca y rango de fechas, y ordena por prioridad. El caso de uso selecciona el precio de mayor prioridad.
+La consulta JPA filtra por producto, marca y rango de fechas, ordena por prioridad y limita el resultado al primer precio. El puerto de salida devuelve un `Optional<Precio>`, porque una consulta puede no tener resultado, pero nunca devuelve más de uno.
 
 ## Decisiones principales
 
@@ -107,3 +111,7 @@ La consulta JPA filtra por producto, marca y rango de fechas, y ordena por prior
 - Cuando existen varios precios vigentes, gana el de mayor prioridad.
 - H2 permite arrancar y probar el proyecto sin dependencias externas.
 - Las pruebas cubren la lógica de aplicación, el acceso JPA, la carga de datos y el endpoint HTTP.
+- La configuración desactiva `open-in-view` para evitar consultas a la base de datos fuera de la capa de persistencia.
+- La entidad JPA tiene un índice para producto, marca, periodo de vigencia y prioridad, que acompaña a la consulta más frecuente.
+- El dominio valida que un precio tenga identificadores válidos, moneda ISO, un periodo coherente e importe no negativo antes de usarlo.
+- Maven valida estilo sin tabuladores, imports con comodín o bloques sin llaves, y genera un informe de cobertura en cada `verify`.
