@@ -5,20 +5,18 @@ import com.sergiotejeri.servicioprecios.aplicacion.puerto.salida.RepositorioPrec
 import com.sergiotejeri.servicioprecios.dominio.Precio;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
 
 public class ConsultarPrecioAplicableService implements ConsultarPrecioAplicable {
 
-	private final RepositorioPrecios repositorioPrecios;
+    private final RepositorioPrecios repositorioPrecios;
 
-	public ConsultarPrecioAplicableService(RepositorioPrecios repositorioPrecios) {
-		this.repositorioPrecios = repositorioPrecios;
-	}
+    public ConsultarPrecioAplicableService(RepositorioPrecios repositorioPrecios) {
+        this.repositorioPrecios = repositorioPrecios;
+    }
 
-	@Override
-	public Precio consultar(LocalDateTime fechaAplicacion, int idProducto, int idMarca) {
-		return repositorioPrecios.buscarAplicables(fechaAplicacion, idProducto, idMarca).stream()
-				.max(Comparator.comparingInt(Precio::prioridad))
-				.orElseThrow();
-	}
+    @Override
+    public Precio consultar(LocalDateTime fechaAplicacion, int idProducto, int idMarca) {
+        return repositorioPrecios.buscarPrecioAplicable(fechaAplicacion, idProducto, idMarca)
+                .orElseThrow(PrecioNoEncontradoException::new);
+    }
 }
