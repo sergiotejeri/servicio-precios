@@ -117,3 +117,4 @@ La consulta JPA filtra por producto, marca y rango de fechas, ordena por priorid
 - Maven valida el perfil Google de Checkstyle en el código y las pruebas. Cualquier aviso de ese perfil hace fallar la compilación.
 - La selección usa una consulta SQL nativa para H2 que limita la respuesta a una fila. Al cambiar de motor habría que comprobar su compatibilidad.
 - Cada `verify` genera el informe de cobertura y exige un mínimo del 90 % de líneas.
+- Se excluye Mockito de las dependencias de pruebas porque no se utiliza: el caso de uso se prueba con una implementación sencilla del puerto y las pruebas de integración usan Spring y H2. Así se evita cargar un agente innecesario. Si se incorporan mocks de Mockito en el futuro, habrá que añadirlo y configurar su agente según la versión de Java.
