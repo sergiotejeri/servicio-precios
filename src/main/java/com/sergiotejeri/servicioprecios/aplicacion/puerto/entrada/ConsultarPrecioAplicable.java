@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 
 public interface ConsultarPrecioAplicable {
 
-	Precio consultar(LocalDateTime fechaAplicacion, int idProducto, int idMarca);
+    Precio consultar(LocalDateTime fechaAplicacion, int idProducto, int idMarca);
 }

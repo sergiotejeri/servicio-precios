@@ -16,20 +16,20 @@ import java.time.LocalDateTime;
 @Validated
 public class ControladorPrecios {
 
-	private final ConsultarPrecioAplicable consultarPrecioAplicable;
+    private final ConsultarPrecioAplicable consultarPrecioAplicable;
 
-	public ControladorPrecios(ConsultarPrecioAplicable consultarPrecioAplicable) {
-		this.consultarPrecioAplicable = consultarPrecioAplicable;
-	}
+    public ControladorPrecios(ConsultarPrecioAplicable consultarPrecioAplicable) {
+        this.consultarPrecioAplicable = consultarPrecioAplicable;
+    }
 
-	@GetMapping
-	public RespuestaPrecio consultar(
-			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAplicacion,
-			@RequestParam @Min(1) int idProducto,
-			@RequestParam @Min(1) int idMarca) {
-		var precio = consultarPrecioAplicable.consultar(fechaAplicacion, idProducto, idMarca);
-		return new RespuestaPrecio(
-				precio.idProducto(), precio.idMarca(), precio.idTarifa(), precio.fechaInicio(),
-				precio.fechaFin(), precio.importe(), precio.moneda());
-	}
+    @GetMapping
+    public RespuestaPrecio consultar(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAplicacion,
+            @RequestParam @Min(1) int idProducto,
+            @RequestParam @Min(1) int idMarca) {
+        var precio = consultarPrecioAplicable.consultar(fechaAplicacion, idProducto, idMarca);
+        return new RespuestaPrecio(
+                precio.idProducto(), precio.idMarca(), precio.idTarifa(), precio.fechaInicio(),
+                precio.fechaFin(), precio.importe(), precio.moneda());
+    }
 }

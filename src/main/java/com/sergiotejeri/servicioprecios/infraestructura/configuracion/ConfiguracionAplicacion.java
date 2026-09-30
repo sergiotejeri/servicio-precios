@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ConfiguracionAplicacion {
 
-	@Bean
-	ConsultarPrecioAplicable consultarPrecioAplicable(RepositorioPrecios repositorioPrecios) {
-		return new ConsultarPrecioAplicableService(repositorioPrecios);
-	}
+    @Bean
+    ConsultarPrecioAplicable consultarPrecioAplicable(RepositorioPrecios repositorioPrecios) {
+        return new ConsultarPrecioAplicableService(repositorioPrecios);
+    }
 }
