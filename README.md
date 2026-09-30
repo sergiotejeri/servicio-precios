@@ -101,7 +101,7 @@ El proyecto sigue una arquitectura hexagonal sencilla:
 - `aplicacion`: contiene el caso de uso y los puertos que definen cómo se consulta un precio.
 - `infraestructura`: contiene los adaptadores. En este caso, el controlador REST, la configuración de Spring, la carga inicial de H2 y el adaptador JPA.
 
-El caso de uso depende de un puerto de salida (`RepositorioPrecios`), no de JPA. Por eso el acceso a datos puede cambiar sin modificar la lógica de selección del precio.
+El caso de uso depende de un puerto de salida (`RepositorioPrecios`), no de JPA. El adaptador de persistencia puede cambiar sin modificar el caso de uso, siempre que respete el contrato del puerto: devolver el precio vigente de mayor prioridad para la fecha, el producto y la marca solicitados.
 
 La consulta JPA filtra por producto, marca y rango de fechas, ordena por prioridad y limita el resultado al primer precio. El puerto de salida devuelve un `Optional<Precio>`, porque una consulta puede no tener resultado, pero nunca devuelve más de uno.
 
@@ -114,4 +114,6 @@ La consulta JPA filtra por producto, marca y rango de fechas, ordena por priorid
 - La configuración desactiva `open-in-view` para evitar consultas a la base de datos fuera de la capa de persistencia.
 - La entidad JPA tiene un índice para producto, marca, periodo de vigencia y prioridad, que acompaña a la consulta más frecuente.
 - El dominio valida que un precio tenga identificadores válidos, moneda ISO, un periodo coherente e importe no negativo antes de usarlo.
-- Maven valida estilo sin tabuladores, imports con comodín o bloques sin llaves, y genera un informe de cobertura en cada `verify`.
+- Maven valida el perfil Google de Checkstyle en el código y las pruebas. Cualquier aviso de ese perfil hace fallar la compilación.
+- La selección usa una consulta SQL nativa para H2 que limita la respuesta a una fila. Al cambiar de motor habría que comprobar su compatibilidad.
+- Cada `verify` genera el informe de cobertura y exige un mínimo del 90 % de líneas.
